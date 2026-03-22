@@ -1,0 +1,77 @@
+export const ccipRegistryPassportAbi = [
+  {
+    type: "function",
+    name: "owner",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "address" }],
+  },
+  {
+    type: "function",
+    name: "ccipRouter",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "address" }],
+  },
+  {
+    type: "function",
+    name: "destinationChainSelector",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "uint64" }],
+  },
+  {
+    type: "function",
+    name: "destinationReceiver",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "address" }],
+  },
+  {
+    type: "function",
+    name: "quoteSendFee",
+    stateMutability: "view",
+    inputs: [{ name: "data", type: "bytes" }],
+    outputs: [{ type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "setDestination",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "chainSelector", type: "uint64" },
+      { name: "receiver", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "sendCtfCreated",
+    stateMutability: "payable",
+    inputs: [
+      { name: "ctfId", type: "uint256" },
+      { name: "creationTime", type: "uint256" },
+      { name: "supportsTriage", type: "bool" },
+      { name: "sponsor", type: "address" },
+    ],
+    outputs: [{ type: "bytes32" }],
+  },
+  {
+    type: "function",
+    name: "sendMarkFinished",
+    stateMutability: "payable",
+    inputs: [{ name: "ctfId", type: "uint256" }],
+    outputs: [{ type: "bytes32" }],
+  },
+  {
+    type: "function",
+    name: "sendResolved",
+    stateMutability: "payable",
+    inputs: [
+      { name: "ctfId", type: "uint256" },
+      { name: "kind_", type: "uint8" },
+      { name: "outcomeInnerPayload", type: "bytes" },
+    ],
+    outputs: [{ type: "bytes32" }],
+  },
+] as const

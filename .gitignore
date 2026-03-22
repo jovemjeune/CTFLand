@@ -1,0 +1,66 @@
+# --- Secrets & environment (never commit) ---
+.env
+.env.*
+!.env.example
+!**/.env.example
+.env.local
+.env.*.local
+**/.env
+!**/.env.example
+
+# Keys, certs, keystores
+*.pem
+*.p12
+*.key
+id_rsa
+id_ed25519
+*.keystore
+**/keystore/
+**/.secrets/
+
+# Logs & debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Dependencies & build outputs ---
+node_modules/
+.pnp
+.pnp.js
+.next/
+out/
+build/
+dist/
+.turbo/
+coverage/
+
+# Foundry / Solidity artifacts (regenerate with forge build)
+foundry/out/
+foundry/cache/
+foundry/broadcast/**/dry-run/
+
+# OS & editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Optional: local tooling
+.vercel
+
+# Local-only config that may hold RPC URLs or key names (keep out of git)
+secrets.yaml
+**/secrets.yaml
+
+# Broken git metadata (if recovery leaves a folder behind)
+.git.corrupt-backup-*/
+
+# Backups of nested git dirs when using a single top-level repo (Foundry / Next had their own .git)
+.nested-repos-backup/
+
+# Vendored Foundry libs — CI/docker .env templates (not application secrets)
+foundry/lib/**/.env
+foundry/lib/ccip/.github/actions/setup-postgres/.env

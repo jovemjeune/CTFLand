@@ -1,0 +1,138 @@
+package utils
+
+import (
+	"encoding/hex"
+	"errors"
+	"fmt"
+
+	"github.com/Masterminds/semver/v3"
+
+	chain_selectors "github.com/smartcontractkit/chain-selectors"
+
+	cldf "github.com/smartcontractkit/chainlink-deployments-framework/deployment"
+)
+
+type ConfigType string
+
+const (
+	ConfigTypeActive           ConfigType        = "active"
+	ConfigTypeCandidate        ConfigType        = "candidate"
+	BypasserManyChainMultisig  cldf.ContractType = "BypasserManyChainMultiSig"
+	CancellerManyChainMultisig cldf.ContractType = "CancellerManyChainMultiSig"
+	ProposerManyChainMultisig  cldf.ContractType = "ProposerManyChainMultiSig"
+	RBACTimelock               cldf.ContractType = "RBACTimelock"
+	CallProxy                  cldf.ContractType = "CallProxy"
+	CapabilitiesRegistry       cldf.ContractType = "CapabilitiesRegistry"
+	CCIPHome                   cldf.ContractType = "CCIPHome"
+	RMNHome                    cldf.ContractType = "RMNHome"
+	BurnMintTokenPool          cldf.ContractType = "BurnMintTokenPool"
+	LockReleaseTokenPool       cldf.ContractType = "LockReleaseTokenPool"
+	TokenPoolLookupTable       cldf.ContractType = "TokenPoolLookupTable"
+	BurnWithFromMintTokenPool  cldf.ContractType = "BurnWithFromMintTokenPool"
+	BurnFromMintTokenPool      cldf.ContractType = "BurnFromMintTokenPool"
+	CCTPTokenPool              cldf.ContractType = "CCTPTokenPool"
+	FeeQuoter                  cldf.ContractType = "FeeQuoter"
+	// CLL Identifiers
+	CLLQualifier         = "CLLCCIP"
+	RMNTimelockQualifier = "RMNMCMS"
+
+	// https://github.com/smartcontractkit/chainlink/blob/1423e2581e8640d9e5cd06f745c6067bb2893af2/contracts/src/v0.8/ccip/libraries/Internal.sol#L275-L279
+	/*
+				```Solidity
+					// bytes4(keccak256("CCIP ChainFamilySelector EVM"))
+					bytes4 public constant CHAIN_FAMILY_SELECTOR_EVM = 0x2812d52c;
+					// bytes4(keccak256("CCIP ChainFamilySelector SVM"));
+		  		bytes4 public constant CHAIN_FAMILY_SELECTOR_SVM = 0x1e10bdc4;
+				```
+	*/
+	EVMFamilySelector   = "2812d52c"
+	SVMFamilySelector   = "1e10bdc4"
+	AptosFamilySelector = "ac77ffec"
+	TVMFamilySelector   = "647e2ba9"
+	SuiFamilySelector   = "c4e05953"
+)
+
+func GetSelectorHex(selector uint64) [4]byte {
+	destFamily, _ := chain_selectors.GetSelectorFamily(selector)
+
+	var hexStr string
+	switch destFamily {
+	case chain_selectors.FamilyEVM:
+		hexStr = EVMFamilySelector
+	case chain_selectors.FamilySolana:
+		hexStr = SVMFamilySelector
+	case chain_selectors.FamilyAptos:
+		hexStr = AptosFamilySelector
+	case chain_selectors.FamilyTon:
+		hexStr = TVMFamilySelector
+	case chain_selectors.FamilySui:
+		hexStr = SuiFamilySelector
+	default:
+		panic(fmt.Sprintf("unsupported chain family: %s", destFamily))
+	}
+
+	return GetHexFromString(hexStr)
+}
+
+func GetHexFromString(hexstr string) [4]byte {
+	b, _ := hex.DecodeString(hexstr)
+	var out [4]byte
+	copy(out[:], b)
+	return out
+}
+
+var (
+	ErrZeroAddress         = errors.New("address cannot be zero address")
+	ErrNoAdapterRegistered = func(family string, version *semver.Version) error {
+		return fmt.Errorf("no adapter registered for chain family %s and version %s", family, version.String())
+	}
+	ErrNoAdapterForSelectorRegistered = func(adapetrName string, selector uint64, version *semver.Version) error {
+		if version != nil {
+			return fmt.Errorf("no %s adapter registered for chain selector %d and version %s", adapetrName, selector, version.String())
+		}
+		return fmt.Errorf("no %s adapter registered for chain selector %d", adapetrName, selector)
+	}
+)
+
+var (
+	Version_1_0_0 = semver.MustParse("1.0.0")
+	Version_1_5_0 = semver.MustParse("1.5.0")
+	Version_1_5_1 = semver.MustParse("1.5.1")
+	Version_1_6_0 = semver.MustParse("1.6.0")
+	Version_1_6_1 = semver.MustParse("1.6.1")
+	Version_2_0_0 = semver.MustParse("2.0.0")
+)
+
+func NewRegistererID(chainFamily string, version *semver.Version) string {
+	return fmt.Sprintf("%s-%s", chainFamily, version.String())
+}
+
+func NewIDFromSelector(chainSelector uint64, version *semver.Version) string {
+	chainFamily, err := chain_selectors.GetSelectorFamily(chainSelector)
+	if err != nil {
+		panic(fmt.Sprintf("invalid chain selector: %d", chainSelector))
+	}
+	return NewRegistererID(chainFamily, version)
+}
+
+const (
+	EXECUTION_STATE_UNTOUCHED  = 0
+	EXECUTION_STATE_INPROGRESS = 1
+	EXECUTION_STATE_SUCCESS    = 2
+	EXECUTION_STATE_FAILURE    = 3
+)
+
+func ExecutionStateToString(state uint8) string {
+	switch state {
+	case EXECUTION_STATE_UNTOUCHED:
+		return "UNTOUCHED"
+	case EXECUTION_STATE_INPROGRESS:
+		return "IN_PROGRESS"
+	case EXECUTION_STATE_SUCCESS:
+		return "SUCCESS"
+	case EXECUTION_STATE_FAILURE:
+		return "FAILURE"
+	default:
+		return "UNKNOWN"
+	}
+}

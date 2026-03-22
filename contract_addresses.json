@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-03-22T05:23:18.176Z",
+  "deployScript": "DeployCTFLandCoreTestnet",
+  "chains": {
+    "43113": {
+      "network": "avalanche_fuji",
+      "SponsorNFT": "0x253be29fcca33261d0d5da2b3bb3ef2b89fc489c",
+      "Registry": "0x9692dbefce17a1333be9f6f28ece2e2cdcb23f6a",
+      "TriageNFT": "0xf20051a138868100dca7ef20e429cc45326b20ad",
+      "JudgeNFT": "0xf38b48b281d3db36a2918d64a836a8e13c88bf3e",
+      "MockWorldID": "0xbfbdc6097e2506ecb9831e3eba3b8aa81f22bb07",
+      "CompetitorNFT": "0x89ba3f5d55da91173f519a3b10e23953549afd56"
+    },
+    "421614": {
+      "network": "arbitrum_sepolia",
+      "SponsorNFT": "0x325f1a6391c8467a91bc06da2dc601b2becc04c8",
+      "Registry": "0xb009dbc9a1a174348b1a8c3af981b4d144a5c9bb",
+      "TriageNFT": "0x8bd49b4bfa5db71cfeda9cdfafb65b9c84b82ab9",
+      "JudgeNFT": "0xfadf570836ae3ef497f51f41713bdf2235e38d55",
+      "MockWorldID": "0xe0bba7d34d6667349fe1fe42bcfbb08f06cca19b",
+      "CompetitorNFT": "0x988b28b8631b698056ce4f78d5cf32409b302b57"
+    }
+  }
+}
